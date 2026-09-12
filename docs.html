@@ -1,0 +1,868 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Scripture - Modern Bible Experience</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Cinzel:wght@500;700&family=Lora:ital,wght@0,400;0,600;1,400&family=Inter:wght@400;500;600&display=swap" rel="stylesheet">
+  
+  <style>
+    :root {
+      --bg-main: #f8fafc;
+      --bg-card: #ffffff;
+      --primary: #0f172a;
+      --accent: #b45309;
+      --accent-hover: #92400e;
+      --text-dark: #1e293b;
+      --text-muted: #64748b;
+      --border: #e2e8f0;
+      --font-heading: 'Cinzel', serif;
+      --font-bible: 'Lora', serif;
+      --font-ui: 'Inter', sans-serif;
+    }
+
+    * { box-sizing: border-box; margin: 0; padding: 0; }
+
+    body {
+      font-family: var(--font-ui);
+      background-color: var(--bg-main);
+      color: var(--text-dark);
+      line-height: 1.6;
+    }
+
+    /* HEADER & NAVIGATION */
+    header {
+      background-color: var(--primary);
+      color: #ffffff;
+      padding: 1rem 2rem;
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      position: sticky;
+      top: 0;
+      z-index: 100;
+      box-shadow: 0 2px 10px rgba(0,0,0,0.15);
+    }
+
+    .brand {
+      font-family: var(--font-heading);
+      font-size: 1.5rem;
+      font-weight: 700;
+      letter-spacing: 1px;
+      color: #f8fafc;
+      cursor: pointer;
+    }
+
+    nav {
+      display: flex;
+      gap: 0.5rem;
+      flex-wrap: wrap;
+    }
+
+    nav button {
+      background: none;
+      border: none;
+      color: #cbd5e1;
+      font-size: 0.95rem;
+      font-weight: 500;
+      cursor: pointer;
+      padding: 0.5rem 1rem;
+      border-radius: 6px;
+      transition: all 0.2s;
+    }
+
+    nav button:hover, nav button.active {
+      color: #ffffff;
+      background-color: rgba(255, 255, 255, 0.1);
+    }
+
+    .container {
+      max-width: 1000px;
+      margin: 0 auto;
+      padding: 2rem 1rem;
+    }
+
+    .section { display: none; }
+    .section.active { display: block; }
+
+    /* HOME LANDING PAGE */
+    .hero {
+      text-align: center;
+      padding: 3rem 1rem;
+      background: linear-gradient(180deg, #1e293b 0%, #0f172a 100%);
+      color: white;
+      border-radius: 12px;
+      margin-bottom: 2rem;
+      box-shadow: 0 10px 25px rgba(0,0,0,0.1);
+    }
+
+    .hero h1 {
+      font-family: var(--font-heading);
+      font-size: 2.5rem;
+      margin-bottom: 0.75rem;
+      color: #fef3c7;
+    }
+
+    .hero p {
+      font-size: 1.1rem;
+      color: #94a3b8;
+      max-width: 600px;
+      margin: 0 auto 1.5rem auto;
+    }
+
+    .quick-search {
+      display: flex;
+      justify-content: center;
+      gap: 0.5rem;
+      max-width: 500px;
+      margin: 0 auto;
+    }
+
+    input[type="text"], textarea {
+      padding: 0.75rem 1rem;
+      font-size: 1rem;
+      border: 1px solid var(--border);
+      border-radius: 6px;
+      outline: none;
+      font-family: var(--font-ui);
+    }
+
+    .quick-search input { flex: 1; }
+
+    .btn-primary {
+      background-color: var(--accent);
+      color: white;
+      border: none;
+      padding: 0.75rem 1.5rem;
+      font-weight: 600;
+      border-radius: 6px;
+      cursor: pointer;
+      transition: background 0.2s;
+    }
+
+    .btn-primary:hover { background-color: var(--accent-hover); }
+
+    .grid-2 {
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+      gap: 1.5rem;
+      margin-bottom: 2rem;
+    }
+
+    .card {
+      background: var(--bg-card);
+      border-radius: 10px;
+      padding: 1.75rem;
+      border: 1px solid var(--border);
+      box-shadow: 0 4px 6px rgba(0,0,0,0.02);
+    }
+
+    .card h3 {
+      font-family: var(--font-heading);
+      color: var(--primary);
+      margin-bottom: 1rem;
+      font-size: 1.25rem;
+      border-bottom: 2px solid #f1f5f9;
+      padding-bottom: 0.5rem;
+    }
+
+    /* BIBLE TEXT TYPOGRAPHY */
+    .bible-container {
+      background: var(--bg-card);
+      padding: 3rem;
+      border-radius: 10px;
+      border: 1px solid var(--border);
+      box-shadow: 0 4px 12px rgba(0,0,0,0.03);
+    }
+
+    .passage-title {
+      font-family: var(--font-heading);
+      font-size: 2rem;
+      text-align: center;
+      color: var(--primary);
+      margin-bottom: 0.25rem;
+    }
+
+    .passage-translation {
+      text-align: center;
+      font-size: 0.85rem;
+      color: var(--text-muted);
+      text-transform: uppercase;
+      letter-spacing: 1px;
+      margin-bottom: 2rem;
+    }
+
+    .bible-text {
+      font-family: var(--font-bible);
+      font-size: 1.25rem;
+      line-height: 2.1;
+      color: #0f172a;
+      text-align: justify;
+    }
+
+    .verse-span {
+      cursor: pointer;
+      padding: 2px 4px;
+      border-radius: 4px;
+      transition: background 0.2s;
+      display: inline;
+    }
+
+    .verse-span:hover {
+      background-color: #fef3c7;
+    }
+
+    .verse-num {
+      font-family: var(--font-ui);
+      font-size: 0.75rem;
+      font-weight: 700;
+      color: var(--accent);
+      vertical-align: super;
+      margin-right: 4px;
+      margin-left: 8px;
+      user-select: none;
+    }
+
+    /* BOOKS GRID */
+    .books-grid {
+      display: grid;
+      grid-template-columns: repeat(auto-fill, minmax(130px, 1fr));
+      gap: 0.75rem;
+      margin-top: 1rem;
+    }
+
+    .book-btn {
+      background: var(--bg-card);
+      border: 1px solid var(--border);
+      padding: 0.75rem;
+      text-align: center;
+      border-radius: 6px;
+      cursor: pointer;
+      font-weight: 500;
+      transition: all 0.2s;
+    }
+
+    .book-btn:hover {
+      background: var(--accent);
+      color: white;
+      border-color: var(--accent);
+    }
+
+    /* FORM STYLING FOR DEVOTION MAKER */
+    .form-group {
+      margin-bottom: 1.25rem;
+    }
+
+    .form-group label {
+      display: block;
+      font-weight: 600;
+      margin-bottom: 0.35rem;
+      color: var(--primary);
+    }
+
+    .form-group input, .form-group textarea {
+      width: 100%;
+    }
+
+    .saved-devotion-card {
+      background: var(--bg-card);
+      border: 1px solid var(--border);
+      border-left: 5px solid var(--accent);
+      border-radius: 8px;
+      padding: 1.5rem;
+      margin-bottom: 1.5rem;
+    }
+
+    .saved-devotion-card h4 {
+      font-family: var(--font-heading);
+      color: var(--primary);
+      font-size: 1.2rem;
+      margin-bottom: 0.25rem;
+    }
+
+    .saved-devotion-card .date-badge {
+      font-size: 0.8rem;
+      color: var(--text-muted);
+      margin-bottom: 1rem;
+    }
+
+    .saved-section-title {
+      font-weight: 700;
+      color: var(--accent);
+      margin-top: 0.75rem;
+      font-size: 0.9rem;
+      text-transform: uppercase;
+    }
+
+    /* PRAYER WALL */
+    .prayer-card {
+      border-left: 4px solid var(--accent);
+      background: #fffbe0;
+      padding: 1rem 1.25rem;
+      margin-bottom: 1rem;
+      border-radius: 0 6px 6px 0;
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+    }
+
+    .prayer-author {
+      font-weight: 600;
+      color: var(--primary);
+      font-size: 0.95rem;
+    }
+
+    .prayer-body {
+      margin-top: 0.25rem;
+      font-size: 0.95rem;
+      color: var(--text-dark);
+    }
+
+    .amen-btn {
+      background: white;
+      border: 1px solid var(--border);
+      padding: 0.4rem 0.8rem;
+      border-radius: 20px;
+      font-size: 0.85rem;
+      cursor: pointer;
+      font-weight: 600;
+      color: var(--accent);
+      transition: all 0.2s;
+    }
+
+    .amen-btn:hover {
+      background: var(--accent);
+      color: white;
+    }
+
+    /* DETAIL MODAL */
+    .modal-overlay {
+      position: fixed;
+      top: 0; left: 0; right: 0; bottom: 0;
+      background: rgba(15, 23, 42, 0.6);
+      display: none;
+      justify-content: center;
+      align-items: center;
+      z-index: 1000;
+      padding: 1rem;
+    }
+
+    .modal-overlay.active { display: flex; }
+
+    .modal-card {
+      background: white;
+      padding: 2rem;
+      border-radius: 12px;
+      max-width: 500px;
+      width: 100%;
+      box-shadow: 0 20px 25px -5px rgba(0, 0, 0, 0.1);
+    }
+
+    .modal-meta {
+      font-size: 0.85rem;
+      color: var(--text-muted);
+      margin-bottom: 1rem;
+    }
+
+    .clickable-link {
+      color: var(--accent);
+      text-decoration: underline;
+      cursor: pointer;
+      font-weight: 600;
+    }
+  </style>
+</head>
+<body>
+
+  <!-- HEADER NAVBAR WITH NEW "MY DEVOTION" BUTTON -->
+  <header>
+    <div class="brand" onclick="showSection('home')">📖 SCRIPTURE</div>
+    <nav>
+      <button class="nav-btn active" onclick="showSection('home')">Home</button>
+      <button class="nav-btn" onclick="showSection('reader')">Read Bible</button>
+      <button class="nav-btn" onclick="showSection('my-devotion')">✍️ My Devotion</button>
+      <button class="nav-btn" onclick="showSection('books')">All Books</button>
+      <button class="nav-btn" onclick="showSection('devotion')">Daily Sample</button>
+      <button class="nav-btn" onclick="showSection('prayer')">Prayer Wall</button>
+    </nav>
+  </header>
+
+  <div class="container">
+
+    <!-- 1. HOME SECTION -->
+    <section id="home" class="section active">
+      <div class="hero">
+        <h1>Discover God's Word</h1>
+        <p>Explore, read, and write your daily personal devotions with clean typography.</p>
+        <div class="quick-search">
+          <input type="text" id="home-search-input" placeholder="e.g. John 3:16, Psalm 23..." value="John 3:16">
+          <button class="btn-primary" onclick="quickSearch()">Read Now</button>
+        </div>
+      </div>
+
+      <div class="grid-2">
+        <div class="card">
+          <h3>Verse of the Day</h3>
+          <div id="votd-reference" style="font-weight: 600; color: var(--accent); margin-bottom: 0.5rem;">Loading...</div>
+          <p id="votd-text" style="font-family: var(--font-bible); font-size: 1.1rem; font-style: italic;">Fetching daily verse...</p>
+        </div>
+
+        <div class="card">
+          <h3>Create Personal Devotion</h3>
+          <h4 style="color: var(--primary); margin-bottom: 0.5rem;">Write Your Journal Today</h4>
+          <p style="font-size: 0.95rem; color: var(--text-muted); margin-bottom: 1rem;">
+            Record your daily reflections, motivation, application, and prayers easily.
+          </p>
+          <button class="btn-primary" style="padding: 0.5rem 1rem; font-size: 0.85rem;" onclick="showSection('my-devotion')">Open Journal</button>
+        </div>
+      </div>
+    </section>
+
+    <!-- 2. BIBLE READER SECTION -->
+    <section id="reader" class="section">
+      <div style="display: flex; gap: 0.5rem; margin-bottom: 1.5rem;">
+        <input type="text" id="passage-input" placeholder="Enter Verse or Chapter (e.g. Genesis 1, John 14)" style="flex: 1;" value="John 1:1-5">
+        <button class="btn-primary" onclick="fetchPassage()">Search</button>
+      </div>
+
+      <div class="bible-container">
+        <div class="passage-title" id="passage-ref">John 1:1-5</div>
+        <div class="passage-translation" id="passage-trans">World English Bible</div>
+        <div class="bible-text" id="bible-content">
+          Loading scripture...
+        </div>
+      </div>
+    </section>
+
+    <!-- 3. MY DEVOTION MAKER (NEW SECTION) -->
+    <section id="my-devotion" class="section">
+      <div class="card" style="margin-bottom: 2rem;">
+        <h3 style="margin-bottom: 1.5rem;">✍️ My Personal Devotion Journal</h3>
+        
+        <form id="devotion-form" onsubmit="savePersonalDevotion(event)">
+          <div class="grid-2">
+            <div class="form-group">
+              <label for="dev-title">Title / Matalimhang Pamagat</label>
+              <input type="text" id="dev-title" placeholder="e.g., Ang Tiwala sa Gitna ng Bagyo" required>
+            </div>
+            <div class="form-group">
+              <label for="dev-scripture">Scripture / Teks o Bersikulo</label>
+              <input type="text" id="dev-scripture" placeholder="e.g., Proverbs 3:5-6" required>
+            </div>
+          </div>
+
+          <div class="form-group">
+            <label for="dev-reflection">💡 Reflection (Pagninilay)</label>
+            <textarea id="dev-reflection" rows="3" placeholder="Ano ang sinasabi ng talatang ito tungkol sa Diyos at sa iyong buhay?" required></textarea>
+          </div>
+
+          <div class="form-group">
+            <label for="dev-motivation">🔥 Motivation (Inspirasyon para sa Araw na Ito)</label>
+            <textarea id="dev-motivation" rows="2" placeholder="Anong pangako ng Diyos ang nagbibigay sa iyo ng lakas at pag-asa ngayong araw?" required></textarea>
+          </div>
+
+          <div class="form-group">
+            <label for="dev-application">🎯 Application (Pagsasabuhay)</label>
+            <textarea id="dev-application" rows="2" placeholder="Ano ang konkretong aksyon na gagawin mo batay sa iyong nabasa?" required></textarea>
+          </div>
+
+          <div class="form-group">
+            <label for="dev-prayer">🙏 Prayer (Panalangin)</label>
+            <textarea id="dev-prayer" rows="2" placeholder="Isulat ang iyong maikling panalangin sa Diyos..." required></textarea>
+          </div>
+
+          <button type="submit" class="btn-primary" style="width: 100%; padding: 1rem;">💾 Save Devotion Entry</button>
+        </form>
+      </div>
+
+      <h3 style="font-family: var(--font-heading); margin-bottom: 1rem;">📚 Saved Devotional Entries</h3>
+      <div id="saved-devotions-list">
+        <!-- Dynamically populated entries -->
+      </div>
+    </section>
+
+    <!-- 4. ALL BOOKS SECTION -->
+    <section id="books" class="section">
+      <h2 style="font-family: var(--font-heading); margin-bottom: 1rem;">Old Testament</h2>
+      <div class="books-grid" id="ot-grid"></div>
+
+      <h2 style="font-family: var(--font-heading); margin-top: 2rem; margin-bottom: 1rem;">New Testament</h2>
+      <div class="books-grid" id="nt-grid"></div>
+    </section>
+
+    <!-- 5. DEVOTIONAL SAMPLE SECTION -->
+    <section id="devotion" class="section">
+      <div class="bible-container">
+        <div class="passage-title">Finding Peace in Trust</div>
+        <div class="passage-translation">Daily Devotional Sample</div>
+        <hr style="margin-bottom: 1.5rem; border: none; border-top: 1px solid var(--border);">
+        
+        <p style="font-size: 1.1rem; line-height: 1.8; margin-bottom: 1rem;">
+          <strong>Key Passage:</strong> 
+          <span class="clickable-link" onclick="openPassageDirectly('Proverbs 3:5-6')">Proverbs 3:5-6</span> — 
+          <em>“Trust in Yahweh with all your heart, and don’t lean on your own understanding.”</em>
+        </p>
+
+        <p style="margin-bottom: 1rem;">
+          Life often brings situations where we cannot see the complete outcome. When we try to control every variable using our own understanding, anxiety is usually the result.
+        </p>
+
+        <p style="margin-bottom: 1.5rem;">
+          God calls us to surrender our tight grip on the future. Trusting Him means acknowledging that His perspective is wider and His guidance is faithful.
+        </p>
+
+        <h3 style="font-family: var(--font-heading); margin-bottom: 0.5rem;">Reflection Questions:</h3>
+        <ul style="margin-left: 1.5rem; margin-bottom: 1.5rem;">
+          <li>What situation in your life right now requires you to trust God instead of your own plan?</li>
+          <li>How can you practice letting go of anxiety today?</li>
+        </ul>
+      </div>
+    </section>
+
+    <!-- 6. PRAYER WALL -->
+    <section id="prayer" class="section">
+      <div class="card" style="margin-bottom: 2rem;">
+        <h3>Submit a Prayer Request</h3>
+        <input type="text" id="prayer-name" placeholder="Your Name or Initial" style="width: 100%; margin-bottom: 0.75rem;">
+        <textarea id="prayer-text" rows="3" placeholder="Type your prayer request here..." style="width: 100%; margin-bottom: 0.75rem;"></textarea>
+        <button class="btn-primary" onclick="addPrayer()">Post Prayer</button>
+      </div>
+
+      <h3 style="font-family: var(--font-heading); margin-bottom: 1rem;">Community Prayer Requests</h3>
+      <div id="prayer-feed">
+        <div class="prayer-card">
+          <div>
+            <div class="prayer-author">Sarah M.</div>
+            <div class="prayer-body">Please pray for guidance and wisdom for my family as we navigate new career decisions this month.</div>
+          </div>
+          <button class="amen-btn" onclick="addAmen(this)">🙏 12</button>
+        </div>
+      </div>
+    </section>
+
+  </div>
+
+  <!-- VERSE DETAIL MODAL -->
+  <div class="modal-overlay" id="verse-modal">
+    <div class="modal-card">
+      <h3 style="font-family: var(--font-heading); margin-bottom: 0.25rem; color: var(--primary);" id="modal-title">Verse Details</h3>
+      <div class="modal-meta" id="modal-meta">Translation: WEB | Word count: 0</div>
+      <p style="font-family: var(--font-bible); font-style: italic; margin-bottom: 1.5rem; color: var(--text-dark);" id="modal-text"></p>
+      
+      <div style="display: flex; gap: 0.5rem;">
+        <button class="btn-primary" style="flex: 1;" onclick="copyVerse()">Copy Verse</button>
+        <button class="btn-primary" style="flex: 1; background-color: var(--primary);" onclick="shareVerse()">Share</button>
+        <button class="btn-primary" style="background: #64748b; flex: 1;" onclick="closeModal()">Close</button>
+      </div>
+    </div>
+  </div>
+
+  <script>
+    let currentSelectedText = "";
+    let currentSelectedRef = "";
+    let currentTranslation = "World English Bible";
+
+    // NAVIGATION CONTROLLER
+    function showSection(sectionId) {
+      document.querySelectorAll('.section').forEach(el => el.classList.remove('active'));
+      document.querySelectorAll('.nav-btn').forEach(btn => btn.classList.remove('active'));
+
+      document.getElementById(sectionId).classList.add('active');
+      
+      const activeBtn = Array.from(document.querySelectorAll('.nav-btn')).find(
+        btn => btn.getAttribute('onclick') && btn.getAttribute('onclick').includes(sectionId)
+      );
+      if (activeBtn) activeBtn.classList.add('active');
+    }
+
+    function quickSearch() {
+      const val = document.getElementById('home-search-input').value;
+      openPassageDirectly(val);
+    }
+
+    function openPassageDirectly(refText) {
+      document.getElementById('passage-input').value = refText;
+      showSection('reader');
+      fetchPassage();
+    }
+
+    // BIBLE API FETCH
+    async function fetchPassage() {
+      const query = document.getElementById('passage-input').value;
+      const refBox = document.getElementById('passage-ref');
+      const transBox = document.getElementById('passage-trans');
+      const contentBox = document.getElementById('bible-content');
+
+      if (!query) return;
+
+      contentBox.innerHTML = "<em>Loading scripture...</em>";
+
+      try {
+        const res = await fetch(`https://bible-api.com/${encodeURIComponent(query)}`);
+        const data = await res.json();
+
+        if (data.error) {
+          refBox.innerText = "Passage Not Found";
+          transBox.innerText = "";
+          contentBox.innerHTML = "Please check your search term (e.g., 'John 3:16', 'Psalm 23').";
+          return;
+        }
+
+        refBox.innerText = data.reference;
+        transBox.innerText = data.translation_name || "WEB";
+        currentTranslation = data.translation_name || "WEB";
+
+        if (data.verses && data.verses.length > 0) {
+          let html = "";
+          data.verses.forEach(v => {
+            const cleanText = v.text.trim();
+            const verseRef = `${v.book_name} ${v.chapter}:${v.verse}`;
+            const safeText = cleanText.replace(/"/g, '&quot;');
+            
+            html += `<span class="verse-span" data-ref="${verseRef}" data-text="${safeText}">` +
+                    `<span class="verse-num">${v.verse}</span>${cleanText}</span> `;
+          });
+          contentBox.innerHTML = html;
+        } else {
+          contentBox.innerText = data.text;
+        }
+      } catch (err) {
+        contentBox.innerHTML = "Error loading scripture. Please check your connection.";
+      }
+    }
+
+    // EVENT DELEGATION FOR VERSES
+    document.getElementById('bible-content').addEventListener('click', function(e) {
+      const target = e.target.closest('.verse-span');
+      if (target) {
+        const ref = target.getAttribute('data-ref');
+        const text = target.getAttribute('data-text');
+        openVerseDetail(ref, text);
+      }
+    });
+
+    // VERSE DETAIL MODAL
+    function openVerseDetail(ref, text) {
+      currentSelectedRef = ref;
+      currentSelectedText = text;
+      
+      const wordCount = text ? text.split(/\s+/).filter(Boolean).length : 0;
+
+      document.getElementById('modal-title').innerText = ref;
+      document.getElementById('modal-meta').innerText = `Translation: ${currentTranslation} | Words: ${wordCount}`;
+      document.getElementById('modal-text').innerText = `"${text}"`;
+      document.getElementById('verse-modal').classList.add('active');
+    }
+
+    function closeModal() {
+      document.getElementById('verse-modal').classList.remove('active');
+    }
+
+    function copyVerse() {
+      const copyContent = `${currentSelectedRef} - "${currentSelectedText}" (${currentTranslation})`;
+      navigator.clipboard.writeText(copyContent);
+      alert('Verse copied to clipboard!');
+      closeModal();
+    }
+
+    async function shareVerse() {
+      const shareData = {
+        title: currentSelectedRef,
+        text: `${currentSelectedRef} - "${currentSelectedText}"`,
+        url: window.location.href
+      };
+
+      if (navigator.share) {
+        try {
+          await navigator.share(shareData);
+        } catch (err) {
+          console.log('Share error or canceled');
+        }
+      } else {
+        copyVerse();
+      }
+    }
+
+    // PERSONAL DEVOTION MAKER (LOCAL STORAGE)
+    function savePersonalDevotion(event) {
+      event.preventDefault();
+
+      const newDevotion = {
+        id: Date.now(),
+        date: new Date().toLocaleDateString('en-US', { year: 'numeric', month: 'long', day: 'numeric' }),
+        title: document.getElementById('dev-title').value,
+        scripture: document.getElementById('dev-scripture').value,
+        reflection: document.getElementById('dev-reflection').value,
+        motivation: document.getElementById('dev-motivation').value,
+        application: document.getElementById('dev-application').value,
+        prayer: document.getElementById('dev-prayer').value
+      };
+
+      let devotions = JSON.parse(localStorage.getItem('my_devotions') || '[]');
+      devotions.unshift(newDevotion);
+      localStorage.setItem('my_devotions', JSON.stringify(devotions));
+
+      document.getElementById('devotion-form').reset();
+      renderDevotions();
+      alert('Devotion entry saved successfully!');
+    }
+
+    function renderDevotions() {
+      const listContainer = document.getElementById('saved-devotions-list');
+      let devotions = JSON.parse(localStorage.getItem('my_devotions') || '[]');
+
+      if (devotions.length === 0) {
+        listContainer.innerHTML = '<p style="color: var(--text-muted); italic;">Wala ka pang na-isasave na devotion. Magsimula sa itaas!</p>';
+        return;
+      }
+
+      let html = '';
+      devotions.forEach(dev => {
+        html += `
+          <div class="saved-devotion-card">
+            <div style="display: flex; justify-content: space-between; align-items: flex-start;">
+              <h4>${dev.title}</h4>
+              <button onclick="deleteDevotion(${dev.id})" style="background: none; border: none; color: #ef4444; cursor: pointer; font-size: 0.85rem;">Delete</button>
+            </div>
+            <div class="date-badge">📅 ${dev.date} | 📖 <span class="clickable-link" onclick="openPassageDirectly('${dev.scripture}')">${dev.scripture}</span></div>
+
+            <div class="saved-section-title">💡 Reflection</div>
+            <p>${dev.reflection}</p>
+
+            <div class="saved-section-title">🔥 Motivation</div>
+            <p>${dev.motivation}</p>
+
+            <div class="saved-section-title">🎯 Application</div>
+            <p>${dev.application}</p>
+
+            <div class="saved-section-title">🙏 Prayer</div>
+            <p><em>"${dev.prayer}"</em></p>
+          </div>
+        `;
+      });
+
+      listContainer.innerHTML = html;
+    }
+
+    function deleteDevotion(id) {
+      if (confirm('Sigurado ka bang gusto mong burahin ang devotion entry na ito?')) {
+        let devotions = JSON.parse(localStorage.getItem('my_devotions') || '[]');
+        devotions = devotions.filter(d => d.id !== id);
+        localStorage.setItem('my_devotions', JSON.stringify(devotions));
+        renderDevotions();
+      }
+    }
+
+    // VERSE OF THE DAY
+    async function loadVerseOfDay() {
+      try {
+        const res = await fetch('https://bible-api.com/Philippians+4:6-7');
+        const data = await res.json();
+        document.getElementById('votd-reference').innerText = `${data.reference} (${data.translation_name})`;
+        
+        let formattedText = "";
+        data.verses.forEach(v => {
+          formattedText += `<span class="verse-num">${v.verse}</span>${v.text.trim()} `;
+        });
+        document.getElementById('votd-text').innerHTML = formattedText;
+      } catch (e) {
+        document.getElementById('votd-reference').innerText = "Philippians 4:6-7";
+        document.getElementById('votd-text').innerText = "In nothing be anxious, but in everything, by prayer and petition with thanksgiving, let your requests be made known to God.";
+      }
+    }
+
+    // BIBLE BOOKS INDEX
+    const otBooks = [
+      "Genesis", "Exodus", "Leviticus", "Numbers", "Deuteronomy", "Joshua", "Judges", "Ruth",
+      "1 Samuel", "2 Samuel", "1 Kings", "2 Kings", "1 Chronicles", "2 Chronicles", "Ezra", "Nehemiah", "Esther",
+      "Job", "Psalms", "Proverbs", "Ecclesiastes", "Song of Solomon", "Isaiah", "Jeremiah", "Lamentations",
+      "Ezekiel", "Daniel", "Hosea", "Joel", "Amos", "Obadiah", "Jonah", "Micah", "Nahum", "Habakkuk",
+      "Zephaniah", "Haggai", "Zechariah", "Malachi"
+    ];
+
+    const ntBooks = [
+      "Matthew", "Mark", "Luke", "John", "Acts", "Romans", "1 Corinthians", "2 Corinthians",
+      "Galatians", "Ephesians", "Philippians", "Colossians", "1 Thessalonians", "2 Thessalonians",
+      "1 Timothy", "2 Timothy", "Titus", "Philemon", "Hebrews", "James", "1 Peter", "2 Peter",
+      "1 John", "2 John", "3 John", "Jude", "Revelation"
+    ];
+
+    function initBooks() {
+      const otGrid = document.getElementById('ot-grid');
+      const ntGrid = document.getElementById('nt-grid');
+
+      otBooks.forEach(b => {
+        const div = document.createElement('div');
+        div.className = 'book-btn';
+        div.innerText = b;
+        div.onclick = () => selectBook(b);
+        otGrid.appendChild(div);
+      });
+
+      ntBooks.forEach(b => {
+        const div = document.createElement('div');
+        div.className = 'book-btn';
+        div.innerText = b;
+        div.onclick = () => selectBook(b);
+        ntGrid.appendChild(div);
+      });
+    }
+
+    function selectBook(bookName) {
+      openPassageDirectly(`${bookName} 1`);
+    }
+
+    // PRAYER WALL
+    function addPrayer() {
+      const nameInput = document.getElementById('prayer-name');
+      const textInput = document.getElementById('prayer-text');
+      const feed = document.getElementById('prayer-feed');
+
+      if (!textInput.value.trim()) return;
+
+      const card = document.createElement('div');
+      card.className = 'prayer-card';
+      
+      const content = document.createElement('div');
+      
+      const author = document.createElement('div');
+      author.className = 'prayer-author';
+      author.innerText = nameInput.value.trim() || 'Anonymous';
+
+      const body = document.createElement('div');
+      body.className = 'prayer-body';
+      body.innerText = textInput.value.trim();
+
+      content.appendChild(author);
+      content.appendChild(body);
+
+      const amenBtn = document.createElement('button');
+      amenBtn.className = 'amen-btn';
+      amenBtn.innerText = '🙏 1';
+      amenBtn.onclick = function() { addAmen(this); };
+
+      card.appendChild(content);
+      card.appendChild(amenBtn);
+      feed.prepend(card);
+
+      nameInput.value = '';
+      textInput.value = '';
+    }
+
+    function addAmen(btn) {
+      let count = parseInt(btn.innerText.replace(/[^0-9]/g, '')) || 0;
+      btn.innerText = `🙏 ${count + 1}`;
+    }
+
+    // INITIALIZATION
+    window.onload = () => {
+      loadVerseOfDay();
+      initBooks();
+      fetchPassage();
+      renderDevotions();
+    };
+  </script>
+</body>
+</html>
